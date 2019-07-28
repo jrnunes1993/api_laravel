@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Student;
 use App\Http\Requests\StudentRequest;
+use App\Http\Resources\Student as StudentResource;
 
 
 class StudentController extends Controller
@@ -46,21 +47,23 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $student = Student::find($id);
-        if($student) {
-            return response()->json($student,302);
-        }
+    public function show(Student $student)
+    {       
+            return new StudentResource ($student);
+    //     $student = Student::find($id);
+    //     if($student) {
+    //         return response()->json($student,302);
+    //     }
 
-        return response()->json([
-            "errors" => [
-            [
-                "code" => "1",
-                "message"=>"Não existe estudante para esse ID."
-            ]
-        ]
-    ],404);
+    //     return response()->json([
+    //         "errors" => [
+    //         [
+    //             "code" => "1",
+    //             "message"=>"Não existe estudante para esse ID."
+    //         ]
+    //     ]
+    // ],404);
+
     }
 
     /**
