@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Student;
+use App\Http\Requests\StudentRequest;
 
 
 class StudentController extends Controller
@@ -17,7 +18,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return response(Student::get(),200)->header('Content-Type', 'application/json ');
+        return response(Student::get()->makeHidden('classroom_id'),200)->header('Content-Type', 'application/json ');
     }
 
     /**
@@ -26,27 +27,17 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StudentRequest $request)
     {
 
-
-
-        $validator = \Validator::make($request->all(), [
-            'name' => 'required',
-            'gerder' => 'required',
-            'birth' => 'required',
-            'classroom_id' => 'required'
-        ]); 
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(),422);
-        }
-
+        
+        
         try {
             return Student::create($request->all());
         }catch (\Throwable $e){
             return response()->json(["message" => $e->getMessage()],500);
         }
+        
     }
 
     /**
@@ -68,8 +59,8 @@ class StudentController extends Controller
                 "code" => "1",
                 "message"=>"Não existe estudante para esse ID."
             ]
-    ]
-        ],404);
+        ]
+    ],404);
     }
 
     /**
